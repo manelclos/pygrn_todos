@@ -126,3 +126,18 @@ APP_URL = os.getenv('APP_URL', APP_URL)
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static')
 STATIC_ROOT = os.getenv('STATIC_ROOT', STATIC_ROOT)
 STATIC_URL = '%s/static/' % APP_URL
+
+
+# Overwrite settings depending on environment
+ENVIRONMENT_NAME = os.environ.get('ENVIRONMENT_NAME', 'production')
+
+extra_settings = 'settings-%s.py' % ENVIRONMENT_NAME
+extra_settings_path = os.path.join(
+    BASE_DIR, 'todos_project', extra_settings)
+if os.path.exists(extra_settings_path):
+    print('Try to load extra settings: %s' % extra_settings)
+    # execfile(extra_settings_path, globals())
+    exec(compile(
+        open(
+            extra_settings_path, "rb"
+            ).read(), extra_settings_path, 'exec'), globals())
